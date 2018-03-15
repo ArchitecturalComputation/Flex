@@ -17,5 +17,55 @@ namespace FlexComputation
     // Step 5. Copy this mesh and MOVE the MESH POINTS upwards according to the remaped values from the curvature analysis. This will give different thickness along the geometry.
     // Step 6. Create a closed SOLID GEOMETRY suitable for 3d printing, using the hexagon meshes.
 
+    class FlexComputation
+    {
+        public IEnumerable<GeometryBase> OutGeometry { get; set; }
+
+        public FlexComputation(Mesh inputMesh, double targetLength)
+        {
+            var remesh = Remesher.ReMesh(inputMesh, targetLength);
+            var duals = DualGraph(remesh);
+
+            OutGeometry = duals.Select(d=>d.ToPolylineCurve());
+            //OutGeometry = null;
+        }
+
+        List<Polyline> DualGraph(Mesh mesh)
+        {
+            mesh.TopologyVertices.SortEdges();
+            var duals = new List<Polyline>();
+
+            for (int i = 0; i < mesh.TopologyVertices.Count; i++)
+            {
+                var edges = mesh.TopologyVertices.ConnectedEdges(i);
+
+                var dual = new Polyline();
+                foreach (var edge in edges)
+                {
+                    int[] faces = mesh.TopologyEdges.GetConnectedFaces(edge, out bool[] orientation);
+                    if (faces.Length == 1)
+                    {
+                        dual = null;
+                        break;
+                    }
+
+                    var pair = mesh.TopologyEdges.GetTopologyVertices(edge);
+                    int faceEdge = pair.I == i ? 0 : 1;
+                    if (!orientation[0]) faceEdge = 1 - faceEdge;
+                    int face = faces[faceEdge];
+                    Point3d center = mesh.Faces.GetFaceCenter(face);
+                    dual.Add(center);
+                }
+
+                if (dual != null)
+                {
+                    dual.Add(dual[0]);
+                    duals.Add(dual);
+                }
+            }
+
+            return duals;
+        }
+    }
 }
 

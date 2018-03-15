@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\AppData\Roaming\Grasshopper\Libraries\</OutputPath>
+    <OutputPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
@@ -27,15 +27,21 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\AppData\Roaming\Grasshopper\Libraries\</OutputPath>
+    <OutputPath>..\..\..\..\AppData\Roaming\Grasshopper\Libraries\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="KangarooSolver">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Grasshopper\Libraries\KangarooSolver.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Rhino 6\Plug-ins\Grasshopper\Components\KangarooSolver.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Plankton">
+      <HintPath>libs\Plankton.dll</HintPath>
+    </Reference>
+    <Reference Include="PlanktonGh">
+      <HintPath>libs\PlanktonGh.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,10 +67,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KangarooExampleComponent.cs" />
-    <Compile Include="KangarooExampleInfo.cs" />
+    <Compile Include="FlexComputation.cs" />
+    <Compile Include="FlexComputationComponent.cs" />
+    <Compile Include="FlexComputationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleSimulation.cs" />
+    <Compile Include="Remesher.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

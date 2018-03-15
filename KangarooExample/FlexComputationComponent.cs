@@ -16,21 +16,27 @@ namespace FlexComputation
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddMeshParameter("Mesh", "M", "This is my input deformed mesh.", GH_ParamAccess.item);   
+            pManager.AddMeshParameter("Mesh", "M", "This is my input deformed mesh.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Edge length", "L", "Target edge length for remeshing.", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGeometryParameter("Geometry", "G", "This is the output flat 3D object.", GH_ParamAccess.item);
+            pManager.AddGeometryParameter("Geometry", "G", "This is the output flat 3D object.", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Mesh mesh = null;
+            double targetLength = 0;
             DA.GetData(0, ref mesh);
+            DA.GetData(1, ref targetLength);
+            if (targetLength <= 0.0)
+                throw new ArgumentOutOfRangeException(" Target length must be greater than zero.");
 
-            GeometryBase outGeo = null;
-            DA.SetData(0, outGeo);
+            var flex = new FlexComputation(mesh, targetLength);
+ 
+            DA.SetDataList(0, flex.OutGeometry);
         }
     }
 }
